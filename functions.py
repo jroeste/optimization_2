@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import time
 
 def f_model(z_list,n,x, my, lambda_low, lambda_high):
-    A,b=construct_A_and_C(n,x)  #endre på construct??
+    A,b=construct_A_and_b(n,x)  #endre på construct??
     functionsum=0
     for i in range(len(z_list)):    #length m
         functionsum+=compute_r_i(z_list[i],A,b)**2
@@ -16,7 +16,7 @@ def compute_r_i(z_list_i,A,b):
         return max([1-np.dot(z_list_i[1:],np.matmul(A,z_list_i[1:]))-np.dot(b,z_list_i[1:]),0])
 
 
-def construct_A_and_C(n,x):
+def construct_A_and_b(n,x):
     C=x[int(n*(n+1)/2):]
     A=np.zeros((n,n))
     index=0
@@ -28,7 +28,7 @@ def construct_A_and_C(n,x):
     return A, C
 
 def df_model(z_list,n,x):
-    A,b = construct_A_and_C(n,x)
+    A,b = construct_A_and_b(n,x)
     dfx=np.zeros(int(n*(n+1)/2)+n)
     for i in range(len(z_list)):     #length m
         index = 0
