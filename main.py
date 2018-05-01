@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 
 
-            }[2]
+            }[0]
     if Master_Flag =='Create dataset':
         a00 = np.random.uniform(0, 2)
         a11 = np.random.uniform(0, 2)
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         b=[0,0]
         z_list=f.construct_z_elliptic(n, m, A, b, area)
         solution=meth.log_barrier(z_list, n, x_initial ,lambda_low, lambda_high)
-        print(solution)
+        #print(solution)
         A,b=f.construct_A_and_b(n, solution)
         X, Y, Z = p.make_ellipse(A, b, area, p.eval_func_model_2D)
         p.plot_dataset_2d(X, Y, Z)
