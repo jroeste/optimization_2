@@ -2,12 +2,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+def c(x, lambda_low, lambda_high):
+    c=np.zeros(5)
+    c[0]=x[0] - lambda_low
+    c[1]=-x[0] + lambda_high
+    c[2]=x[2] - lambda_low
+    c[3]=-x[2] + lambda_high
+    c[4]=x[0]*x[2] - lambda_low**2-x[1]**2
+    return c
+
 def f_model(z_list,n,x, my, lambda_low, lambda_high):
     A,b=construct_A_and_b(n,x)  #endre på construct??
     functionsum=0
     for i in range(len(z_list)):    #length m
         functionsum+=compute_r_i(z_list[i],A,b)**2
     return functionsum
+
+def P(z_list, n, x, my, lambda_low, lambda_high):
+    functionsum=f_model(z_list, n, x, my, lambda_low, lambda_high)
+    functionsum -= my * np.log(c1(x, lambda_low, lambda_high))
+    functionsum -= my * np.log(c2(x, lambda_low, lambda_high))
+    functionsum -= my * np.log(c3(x, lambda_low, lambda_high))
+    functionsum -= my * np.log(c4(x, lambda_low, lambda_high))
+    functionsum -= my * np.log(c5(x, lambda_low, lambda_high))
 
 def compute_r_i(z_list_i,A,b):
     if z_list_i[0]>0:
