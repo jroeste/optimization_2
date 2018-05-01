@@ -40,23 +40,23 @@ def steepestDescent(f, df, z_list, n, xk):
     return xk, residuals
 
 
-def BFGS(f, df, z_list, n, xk):
+def BFGS(f, df, z_list, n, xk, tau, my):
     residuals = []
     residuals.append(f(z_list, n, xk))
     I=np.identity(int(n * (n + 1) / 2) + n)
     Hk = I
-    fk = f(z_list, n, xk)
-    dfk = df(z_list, n, xk)
+    fk = f(z_list, n, xk, my)
+    dfk = df(z_list, n, xk, my)
     counter=0
-    while fk > 10e-2 and np.linalg.norm(dfk, 2) > 10e-6:
+    while fk > 10e-2 and np.linalg.norm(dfk, 2) > tau:
         p = -Hk.dot(dfk)
         alpha = note3algoritme(f, df, z_list, n, p, xk)
         xk_prev=xk
         xk = xk + alpha*p
         sk = xk - xk_prev
-        fk=f(z_list, n, xk)
+        fk=f(z_list, n, xk, my)
         dfk_prev=dfk
-        dfk = df(z_list, n, xk)
+        dfk = df(z_list, n, xk, my)
         yk = dfk - dfk_prev
         rho = 1 / np.dot(yk, sk)
         Hk_prev=Hk
@@ -69,4 +69,8 @@ def log_barrier(z_list, n, xk):
     my=1
     tau=1e-2
     while True:
-        x_k_plus_one, res=BFGS(f.f_model, f.df_model, z_list, n, xk)
+        xk_plus_one, res=BFGS(f.f_model, f.df_model, z_list, n, xk, my, tau)
+        if my<0.001:
+            return xk_plus_one
+        my*=0.5
+        xk=xk_plus_one
