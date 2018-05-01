@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-def c(x, lambda_low, lambda_high):
+def c_function(x, lambda_low, lambda_high):
     c=np.zeros(5)
     c[0]=x[0] - lambda_low
     c[1]=-x[0] + lambda_high
@@ -29,11 +29,12 @@ def f_model(z_list,n,x, my, lambda_low, lambda_high):
 
 def P(z_list, n, x, my, lambda_low, lambda_high):
     functionsum=f_model(z_list, n, x, my, lambda_low, lambda_high)
-    functionsum -= my * np.log(c1(x, lambda_low, lambda_high))
-    functionsum -= my * np.log(c2(x, lambda_low, lambda_high))
-    functionsum -= my * np.log(c3(x, lambda_low, lambda_high))
-    functionsum -= my * np.log(c4(x, lambda_low, lambda_high))
-    functionsum -= my * np.log(c5(x, lambda_low, lambda_high))
+    c=c_function(x, lambda_low, lambda_high)
+    for i in range(len(c)):
+        functionsum-=my*np.log(c[i])
+    return functionsum
+
+
 
 
 def lagrange_z(my,x,lambda_low,lambda_high):
@@ -58,7 +59,7 @@ def construct_A_and_b(n,x):
             index+=1
     return A, C
 
-def df_model(z_list,n,x):
+def df_model(z_list,n,x, my, lambda_low, lambda_high):
     A,b = construct_A_and_b(n,x)
     dfx=np.zeros(int(n*(n+1)/2)+n)
     for i in range(len(z_list)):     #length m
@@ -81,6 +82,12 @@ def df_model(z_list,n,x):
                 dfx[int(n * (n + 1) / 2) + h] += z_list[i][0]*2*ri*z_list[i][h+1]
     return dfx
 
+def dP(z_list, n, x, my, lambda_low, lambda_high):
+    function=df_model(z_list,n,x, my, lambda_low, lambda_high)
+    c=c_function(x, lambda_low, lambda_high)
+    dc=dc_function(x, lambda_low, lambda_high)
+    for i in range(len(c)):
+        function-=(my/c[i])*dc[i]
 
 
 def construct_z_elliptic(n, m, A, c, area):
