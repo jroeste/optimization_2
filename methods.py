@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import functions as f
 import time
 
 def note3algoritme(f, df, z_list, n, p, x):
@@ -62,3 +63,10 @@ def BFGS(f, df, z_list, n, xk):
         Hk=np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
         residuals.append(fk)
     return xk, residuals
+
+
+def log_barrier(z_list, n, xk):
+    my=1
+    tau=1e-2
+    while True:
+        x_k_plus_one, res=BFGS(f.f_model, f.df_model, z_list, n, xk)
