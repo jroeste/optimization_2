@@ -11,6 +11,15 @@ def c(x, lambda_low, lambda_high):
     c[4]=x[0]*x[2] - lambda_low**2-x[1]**2
     return c
 
+def grad_c(x, lambda_low, lambda_high):
+    grad_c=np.zeros((5,5))
+    grad_c[0]=[1,0,0,0,0]
+    grad_c[1]=[-1,0,0,0,0]
+    grad_c[2]=[0,0,1,0,0]
+    grad_c[3]=[0,0,-1,0,0]
+    grad_c[4]=[x[2],-2*x[1],x[1],0,0]
+    return grad_c
+
 def f_model(z_list,n,x, my, lambda_low, lambda_high):
     A,b=construct_A_and_b(n,x)  #endre på construct??
     functionsum=0
