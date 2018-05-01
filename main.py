@@ -14,6 +14,8 @@ x_length=int(n*(n+1)/2)+n
 prob=0.05
 min_rec,max_rec=1,4
 
+lambda_low=
+
 if __name__ == "__main__":
 
     Master_Flag = {

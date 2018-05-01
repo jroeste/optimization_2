@@ -11,7 +11,7 @@ def c(x, lambda_low, lambda_high):
     c[4]=x[0]*x[2] - lambda_low**2-x[1]**2
     return c
 
-def grad_c(x, lambda_low, lambda_high):
+def dc_function(x):
     grad_c=np.zeros((5,5))
     grad_c[0]=[1,0,0,0,0]
     grad_c[1]=[-1,0,0,0,0]
@@ -34,6 +34,10 @@ def P(z_list, n, x, my, lambda_low, lambda_high):
     functionsum -= my * np.log(c3(x, lambda_low, lambda_high))
     functionsum -= my * np.log(c4(x, lambda_low, lambda_high))
     functionsum -= my * np.log(c5(x, lambda_low, lambda_high))
+
+
+
+
 
 def compute_r_i(z_list_i,A,b):
     if z_list_i[0]>0:
