@@ -69,7 +69,7 @@ def log_barrier(z_list, n, xk ,lambda_low, lambda_high):
     my=1
     tau=1e-2
     while True:
-        xk_plus_one, res=BFGS(f.f_model, f.df_model, z_list, n, xk, my, tau, lambda_low, lambda_high)
+        xk_plus_one, res=BFGS(f.P, f.dP, z_list, n, xk, my, tau, lambda_low, lambda_high)
         if my<0.001:
             return xk_plus_one
         my*=0.5
