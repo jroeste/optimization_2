@@ -9,12 +9,14 @@ import plotting as p
 '''Constants:'''
 m=50
 n=2
+my=10
 area=2.0
 x_length=int(n*(n+1)/2)+n
 x_initial=np.zeros(x_length)
 x_initial[0], x_initial[2]=1,1
 prob=0.05
 min_rec,max_rec=1,4
+
 
 lambda_low=0.5
 lambda_high=50
@@ -23,8 +25,8 @@ if __name__ == "__main__":
 
     Master_Flag = {
                     0: 'Create dataset',
-                    1: 'Plot'
-
+                    1: 'Plot',
+                    2: 'Testing functions',
 
 
 
@@ -55,6 +57,9 @@ if __name__ == "__main__":
 
     elif Master_Flag=='Plot':
         print("hei igjen")
+
+    elif Master_Flag=='Testing functions':
+        x=np.linspace(-5,5,m)
 
 
 

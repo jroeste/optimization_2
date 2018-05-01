@@ -36,6 +36,13 @@ def P(z_list, n, x, my, lambda_low, lambda_high):
         functionsum-=my*np.log(c[i])
     return functionsum
 
+
+
+
+
+def lagrange_z(my,x,lambda_low,lambda_high):
+    return my/c_function(x,lambda_low,lambda_high)
+
 #Denne er som før
 def compute_r_i(z_list_i,A,b):
     if z_list_i[0]>0:
@@ -91,10 +98,13 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
     #print("inni dp, ekstraledd:", extra_ledd)
     return function
 
-#Denne er som før
+#Julie fixa noke her, antageligvis for å få identisk z-list kvar gong?
 def construct_z_elliptic(n, m, A, b, area):
     z_list = np.random.uniform(-area, area, (m, n + 1))
-    #print("halla", z_list)
+    f=open("workfile.txt","w")
+    for item in z_list:
+        f.write("%s\n" %item)
+    f.close()
     for i in range(m):
         z_list[i][0] = 1
         if compute_r_i(z_list[i], A, b) >= 1:
