@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-import lol
 
-def f_model(z_list,n,x):
+def f_model(z_list,n,x, my, lambda_low, lambda_high):
     A,b=construct_A_and_C(n,x)  #endre på construct??
     functionsum=0
     for i in range(len(z_list)):    #length m
