@@ -2,6 +2,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 import functions as f
 import time
+
+
+
+def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_high):
+    alpha0 = 1
+    rho = 0.5
+    c1 = 0.4
+    alpha = alpha0
+    f0 = func(z_list, n, x, my, lambda_low, lambda_high)
+    while True:  #in the worst case it takes a small step
+        c = f.c_function(x + alpha * p, lambda_low, lambda_high)
+        if np.min(c) <= 0:  # Her er det lagt til for ikkje å hoppe utenfor "lovlig" område
+            alpha = rho * alpha
+        elif func(z_list, n, x + alpha*p, my, lambda_low, lambda_high) <= f0 + c1 * alpha * np.dot(dfunc(z_list, n, x, my, lambda_low, lambda_high), p):
+            return alpha
+        else:
+            alpha = rho * alpha
+
 #denne funksjonen er som før
 def note3algoritme(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_high):
     c1 = 0.5
@@ -37,7 +55,7 @@ def steepestDescent(f, df, z_list, n, xk):
     residuals.append(fk)
     while fk > 10e-4 and np.linalg.norm(dfk, 2) > 10e-6:
         p = - dfk
-        alpha = note3algoritme(f, df, z_list, n, p, xk)
+        alpha = backtrackingLinesearch(f, df, z_list, n, p, xk)
         xk = xk + alpha * p
         fk=f(z_list, n, xk)
         dfk=df(z_list, n, xk)
@@ -56,10 +74,13 @@ def BFGS(func, dfunc, z_list, n, xk, tau, my, lambda_low, lambda_high):
     while fk > 10e-6 and np.linalg.norm(dfk, 2) > tau:
         #print(xk)
         p = -Hk.dot(dfk)
+        #p=-dfk
         if np.dot(p,dfk) >0:        #Her la vi til sjekk av retning som descent-retning
             print("Resetting to steepest descent")
             p = -dfk
-        alpha = note3algoritme(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high) #Skal ha backtracking?
+        alpha = backtrackingLinesearch(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high) #Skal ha backtracking?
+        #if alpha<1e-10:                #Denne fikser alt. Ein naiv måte å velge stopp-kriterie for BFGS
+        #    return xk, residuals
         xk_prev=xk
         xk = xk + alpha*p
         sk = xk - xk_prev
@@ -67,21 +88,20 @@ def BFGS(func, dfunc, z_list, n, xk, tau, my, lambda_low, lambda_high):
         dfk_prev=dfk
         dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
         yk = dfk - dfk_prev
-        rho = 1 / np.dot(yk, sk)
         Hk_prev=Hk
-        Hk=np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
+        if np.dot(yk, sk)> 0:               #Har prøvd med/uten, denne ser med quickfix ikkje vesentlig ut
+            rho = 1 / np.dot(yk, sk)
+            Hk=np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
         residuals.append(fk)
     return xk, residuals
 
 #Denne er laga som algoritmen i boka
 def log_barrier(z_list, n, xk ,lambda_low, lambda_high):
-    my=0        #Setter my_0
+    my=1       #Setter my_0
     tau=1e-5    #grense for å stoppe BFGS
-    while True:
-        #print("c:", f.c_function(xk, lambda_low, lambda_high))
-        xk_plus_one, res=BFGS(f.P, f.dP, z_list, n, xk, my, tau, lambda_low, lambda_high) #Beste løsning av f-log(div) for gitt my. Her kan P byttes ut med F-model for å få gammel kode.
-        #print("test")
-        if my<0.01:     #naivt stoppested
-            return xk_plus_one
+    while my>0.0001:
+        # Beste løsning av f-log(div) for gitt my. Her kan P byttes ut med F-model for å få gammel kode.
+        xk_plus_one, res=BFGS(f.P, f.dP, z_list, n, xk, my, tau, lambda_low, lambda_high)
         my*=0.5 #reduser my før det heile gjentas
         xk=xk_plus_one      #oppdaterer start-x
+    return xk

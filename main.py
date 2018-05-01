@@ -7,7 +7,7 @@ import plotting as p
 
 
 '''Constants:'''
-m=50
+m=500
 n=2
 my=10
 area=2.0
@@ -18,7 +18,7 @@ prob=0.05
 min_rec,max_rec=1,4
 
 
-lambda_low=0.5
+lambda_low=0.1
 lambda_high=50
 
 if __name__ == "__main__":
@@ -33,19 +33,12 @@ if __name__ == "__main__":
 
             }[0]
     if Master_Flag =='Create dataset':
-        #a00 = np.random.uniform(0, 2)
-        #a11 = np.random.uniform(0, 2)
-        #minval = min(a00, a11)
-        #a01 = np.random.uniform(0, minval)
-        #A = [[a00, a01], [a01, a11]]  # symmetric, positive definite A
-        #b = np.random.uniform(-1, 1, n)
-        A=[[1.5, 0.5], [0.5, 1]]    #Denne lager klassifiseringsellipse. [[1, 0.5], [0.5, 0.5]] er eksempel på
-                                    # testproblem der løsningen ligger på grensa av lovlig område,
-                                    #og fungerer foreløpig ikkje.
+        A=[[1, 0.5], [0.5, 0.5]]    #Denne lager klassifiseringsellipse. [[1, 0.5], [0.5, 0.5]] er eksempel på
+                                    # testproblem der løsningen er grei, f eks [[0.001, 3], [3, 0.005]] (og lignende)
+                                    #er målet å få til å funke
         b=[0,0]
         z_list=f.construct_z_elliptic(n, m, A, b, area)     #Lager z-liste fra ellipsen over. Denne lager tilfeldige punkt, som er litt uheldig for testing.
         solution=meth.log_barrier(z_list, n, x_initial ,lambda_low, lambda_high) #Bruker log-barrier for å finne løsning
-        #print(solution)
 
         # Resten plotter
         A,b=f.construct_A_and_b(n, solution)

@@ -93,10 +93,10 @@ def plot_z_points(z,m):
         plt.plot(z[i][1], z[i][2], 'o', color=col)
     #plt.title(title)
 
-def make_ellipse(A,c,area,func):
+def make_ellipse(A,b,area,func):
     delta = 0.01
     x = np.arange(-area*1.2, 1.2*area+delta, delta)
     y = np.arange(-area*1.2, 1.2*area+delta, delta)
     X, Y = np.meshgrid(x, y)
-    Z=func(X, Y, A, c)
+    Z=func(X, Y, A, b)
     return X,Y,Z
