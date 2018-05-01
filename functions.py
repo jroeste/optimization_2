@@ -36,7 +36,8 @@ def P(z_list, n, x, my, lambda_low, lambda_high):
     functionsum -= my * np.log(c5(x, lambda_low, lambda_high))
 
 
-
+def lagrange_z(my,x,lambda_low,lambda_high):
+    return my/c(x,lambda_low,lambda_high)
 
 
 def compute_r_i(z_list_i,A,b):
