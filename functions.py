@@ -35,11 +35,8 @@ def P(z_list, n, x, my, lambda_low, lambda_high):
     return functionsum
 
 
-
-
 def lagrange_z(my,x,lambda_low,lambda_high):
     return my/c_function(x,lambda_low,lambda_high)
-
 
 def compute_r_i(z_list_i,A,b):
     if z_list_i[0]>0:
@@ -88,12 +85,13 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
     dc=dc_function(x)
     for i in range(len(c)):
         function-=(my/c[i])*dc[i]
+    return function
 
 
-def construct_z_elliptic(n, m, A, c, area):
+def construct_z_elliptic(n, m, A, b, area):
     z_list = np.random.uniform(-area, area, (m, n + 1))
     for i in range(m):
         z_list[i][0] = 1
-        if compute_r_i(z_list[i], A, c) >= 1:
+        if compute_r_i(z_list[i], A, b) >= 1:
             z_list[i][0] = -1
     return z_list
