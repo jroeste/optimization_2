@@ -90,6 +90,10 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
 
 def construct_z_elliptic(n, m, A, b, area):
     z_list = np.random.uniform(-area, area, (m, n + 1))
+    f=open("workfile.txt","w")
+    f.write(z_list)
+    f.close()
+
     for i in range(m):
         z_list[i][0] = 1
         if compute_r_i(z_list[i], A, b) >= 1:
