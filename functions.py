@@ -90,7 +90,7 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
 
 def construct_z_elliptic(n, m, A, b, area):
     z_list = np.random.uniform(-area, area, (m, n + 1))
-    f=open("workfile.txt","w")
+    f=open("workfile2.txt","w")
     for item in z_list:
         f.write("%s\n" %item)
     f.close()
