@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -11,13 +13,14 @@ def c_function(x, lambda_low, lambda_high):
     c[4]=x[0]*x[2] - lambda_low**2-x[1]**2
     return c
 #Denne er ny, rekner ut dc som 2d-vektor [dc/dx1, dc/dx2..]
+# Denne er grei, men om vi trenger gradienten til Lagrangian må den gjøres på en annen måte
 def dc_function(x):
     grad_c=np.zeros((5,5))
     grad_c[0]=[1,0,0,0,0]
     grad_c[1]=[-1,0,0,0,0]
     grad_c[2]=[0,0,1,0,0]
     grad_c[3]=[0,0,-1,0,0]
-    grad_c[4]=[x[2],-2*x[1],x[1],0,0]
+    grad_c[4]=[x[2],-2*x[1],x[0],0,0] #Her var det en feil
     return grad_c
 
 #Denne er som før
@@ -35,10 +38,6 @@ def P(z_list, n, x, my, lambda_low, lambda_high):
     for i in range(len(c)):
         functionsum-=my*np.log(c[i])
     return functionsum
-
-
-
-
 
 def lagrange_z(my,x,lambda_low,lambda_high):
     return my/c_function(x,lambda_low,lambda_high)
@@ -98,6 +97,8 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
 #Julie fixa noke her, antageligvis for å få identisk z-list kvar gong?
 def construct_z_elliptic(n, m, A, b, area):
     z_list = np.random.uniform(-area, area, (m, n + 1))
+    #np.save("z_list",z_list) #Bruk denne først til å lagre
+    #z_list = np.load("z_list.npy") #Kommenter så ut de to over og hent inn med denne
     for i in range(m):
         z_list[i][0] = 1
         if compute_r_i(z_list[i], A, b) > 0:
