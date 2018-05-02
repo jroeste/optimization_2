@@ -11,7 +11,6 @@ import plotting as plot
 '''Constants:'''
 m=50 # number of points
 n=2 # dimensions
-my=10
 area=2.0
 x_length=int(n*(n+1)/2)+n
 x_initial=np.zeros(x_length)
@@ -20,7 +19,7 @@ prob=0.05
 min_rec,max_rec=1,4
 
 
-lambda_low = 0.1
+lambda_low = 0.5
 lambda_high = 50
 
 if __name__ == "__main__":
@@ -35,7 +34,7 @@ if __name__ == "__main__":
 
             }[0]
     if Master_Flag =='Create dataset':
-        A=[[1, 0.5], [0.5, 0.5]]    #Denne lager klassifiseringsellipse. [[1, 0.5], [0.5, 0.5]] er eksempel på
+        A=[[0.001, 3], [3, 0.001]]    #Denne lager klassifiseringsellipse. [[1, 0.5], [0.5, 0.5]] er eksempel på
                                     # testproblem der løsningen er grei, f eks [[0.001, 3], [3, 0.005]] (og lignende)
                                     #er målet å få til å funke
         b=[0,0]
