@@ -47,11 +47,18 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
         zk = my/f.c_function(xk, lambda_low, lambda_high)
         columnvector = np.array([zk[0]-zk[1]+zk[4]*xk[2], -2*zk[4]*xk[1], zk[2]-zk[3]+zk[4]*xk[0], 0, 0])
         # KKT conditions where the method also exits if the first KKT condition cannot be fulfilled no matter how small my gets
-        if (np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-2 and my < 1e-2) or my < 1e-100:
+        if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-2 and my < 1e-5:
             print "grad p:", dfk
             print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
             print "columnvector", columnvector
-            print "grad f less than 1e-2:", (np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-2)
             print "my:", my
+            print "KKT fulfilled"
             return xk
-        my = 0.5*my
+        elif np.linalg.norm(dfk, 2) < 1e-5 and my < 1e-5:
+            print "grad p:", dfk
+            print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
+            print "columnvector", columnvector
+            print "my:", my
+            print "Alternative stopping criteria"
+            return xk
+        my = 0.8*my
