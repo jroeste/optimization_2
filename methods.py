@@ -22,15 +22,20 @@ def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_
 def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
     my = 2
     tau = 1e-10    #Stopping criteria for BFGS
+    counter = 0
+
+    #Initialize BFGS
+    xk = xk
     I=np.identity(int(n * (n + 1) / 2) + n)
-    dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
     while True:
+        #begin BFGS
         Hk = I
+        dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
         while np.linalg.norm(dfk, 2) > tau:
             print("innerste while")
-            p = -Hk.dot(dfk)
+            p = -Hk.dot(dfk)/np.linalg.norm(Hk.dot(dfk),2)
             alpha = backtrackingLinesearch(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high)
-            if alpha < 1e-5:
+            if alpha < 1e-10:
                 print("alpha", alpha)
                 break
             xk_prev = xk
@@ -43,22 +48,25 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             if np.dot(yk, sk) > 0: #Update the Hessian if ok
                 rho = 1 / np.dot(yk, sk)
                 Hk = np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
+                print "upate Hessian to", Hk
+        # end BFGS
 
         zk = my/f.c_function(xk, lambda_low, lambda_high)
         columnvector = np.array([zk[0]-zk[1]+zk[4]*xk[2], -2*zk[4]*xk[1], zk[2]-zk[3]+zk[4]*xk[0], 0, 0])
-        # KKT conditions where the method also exits if the first KKT condition cannot be fulfilled no matter how small my gets
-        if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-2 and my < 1e-5:
-            print "grad p:", dfk
-            print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
-            print "columnvector", columnvector
-            print "my:", my
+        print "grad p:", dfk
+        print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
+        print "columnvector", columnvector
+        print "c(x)", f.c_function(xk, lambda_low, lambda_high)
+        print "grad c(x)", f.dc_function(xk)
+        print "my:", my
+        if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-5 and my < 1e-3:
             print "KKT fulfilled"
             return xk
-        elif np.linalg.norm(dfk, 2) < 1e-5 and my < 1e-5:
-            print "grad p:", dfk
-            print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
-            print "columnvector", columnvector
-            print "my:", my
+        elif np.linalg.norm(dfk, 2) < 1e-5 and my < 1e-3:
             print "Alternative stopping criteria"
             return xk
-        my = 0.8*my
+        my = 0.5*my
+        counter += 1
+        if counter > 10:
+            print "counter timeout"
+            return xk

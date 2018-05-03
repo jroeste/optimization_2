@@ -5,24 +5,29 @@ import matplotlib.pyplot as plt
 import methods as meth
 import functions as f
 import plotting as plot
+import sys
 
 
 
 '''Constants:'''
-m=200 # number of points
-n=2 # dimensions
-area=2.0
-x_length=int(n*(n+1)/2)+n
-prob=0.05
-min_rec,max_rec=1,4
+m = 50 # number of points
+n = 2 # dimensions
+area = 2.0
+x_length = int(n*(n+1)/2)+n
+prob = 0.05
+min_rec, max_rec = 1, 4
 
 
 lambda_low = 0.00001
-lambda_high = 90
+lambda_high = 10
 
 x_initial=np.zeros(x_length)
-x_initial[0], x_initial[2] = 1,1 #(lambda_low+lambda_high)/2, (lambda_low+lambda_high)/2
-#x_initial[1] = np.sqrt(0)
+x_initial[0], x_initial[2] = (lambda_low+lambda_high)/2, (lambda_low+lambda_high)/2
+x_initial[1] = np.sqrt((x_initial[0]*x_initial[2]-lambda_low**2)/2)
+print "x_initial", x_initial
+
+if np.amin(f.c_function(x_initial, lambda_low, lambda_high)) < 1e-20:
+    sys.exit("Illegal starting point")
 
 if __name__ == "__main__":
 
@@ -36,7 +41,7 @@ if __name__ == "__main__":
 
             }[0]
     if Master_Flag =='Create dataset':
-        A=[[0.6, 0.7], [0, 0.6]]    #Makes a classifying ellipse. [[1, 0.5], [0.5, 0.5]] er eksempel på
+        A=[[1, 0.5], [0.5, 1]]    #Makes a classifying ellipse. [[1, 0.5], [0.5, 0.5]] er eksempel på
                                     # testproblem der løsningen er grei, f eks [[0.001, 3], [3, 0.005]] (og lignende)
                                     #er målet å få til å funke
         b=[0,0]

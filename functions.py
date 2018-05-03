@@ -17,7 +17,7 @@ def dc_function(x):
     grad_c[1]=[-1,0,0,0,0]
     grad_c[2]=[0,0,1,0,0]
     grad_c[3]=[0,0,-1,0,0]
-    grad_c[4]=[x[2],-2*x[1],x[0],0,0] #Her var det en feil
+    grad_c[4]=[x[2],-2*x[1],x[0],0,0]
     return grad_c
 
 def f_model(z_list,n,x, my, lambda_low, lambda_high):
@@ -78,12 +78,12 @@ def df_model(z_list,n,x, my, lambda_low, lambda_high):
     return dfx
 
 def dP(z_list, n, x, my, lambda_low, lambda_high):
-    function=df_model(z_list,n,x, my, lambda_low, lambda_high)
+    gradP = df_model(z_list,n,x, my, lambda_low, lambda_high)
     c=c_function(x, lambda_low, lambda_high)
     dc=dc_function(x)
     for i in range(len(c)):
-        function-=(my/c[i])*dc[i]
-    return function
+        gradP-=(my/c[i])*dc[i]
+    return gradP
 
 # The z_list can be randomly generated each time or one can load a specific saved one
 def construct_z_elliptic(n, m, A, b, area):
