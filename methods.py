@@ -12,27 +12,25 @@ def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_
     while True:
         print("Backtracking", alpha)
         c = f.c_function(x+alpha*p, lambda_low, lambda_high)
-        if np.amin(c) < 1e-10:        #Holder oss innenfor constraints.
+        if np.amin(c) < 1e-10:        #keeps us inside the constraints
             alpha = rho * alpha
         elif func(z_list, n, x + alpha * p, my, lambda_low, lambda_high) <= f0 + c1 * alpha * np.dot(dfunc(z_list, n, x, my, lambda_low, lambda_high), p):
             return alpha
         else:
             alpha = rho * alpha
 
-# Skifta navn fra BFGS til primalBarrier
 def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
-    my = 0.4
-    tau = 1e-10    #grense for å stoppe BFGS
+    my = 2
+    tau = 1e-10    #Stopping criteria for BFGS
     I=np.identity(int(n * (n + 1) / 2) + n)
     dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
     while True:
-        print("start ytterste while")
         Hk = I
         while np.linalg.norm(dfk, 2) > tau:
             print("innerste while")
-            p = -Hk.dot(dfk) #Alltid descent for BFGS håper jeg. Tok vekk handling av nondescent direction.
+            p = -Hk.dot(dfk)
             alpha = backtrackingLinesearch(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high)
-            if alpha < 1e-10:
+            if alpha < 1e-5:
                 print("alpha", alpha)
                 break
             xk_prev = xk
@@ -48,8 +46,12 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
 
         zk = my/f.c_function(xk, lambda_low, lambda_high)
         columnvector = np.array([zk[0]-zk[1]+zk[4]*xk[2], -2*zk[4]*xk[1], zk[2]-zk[3]+zk[4]*xk[0], 0, 0])
-        if np.max((dfk - columnvector)) < 1e-2 and my < 1e-2: #KKT conditions
-            print("KKT", dfk - columnvector)
+        # KKT conditions where the method also exits if the first KKT condition cannot be fulfilled no matter how small my gets
+        if (np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-2 and my < 1e-2) or my < 1e-100:
+            print "grad p:", dfk
+            print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
+            print "columnvector", columnvector
+            print "grad f less than 1e-2:", (np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-2)
+            print "my:", my
             return xk
         my = 0.5*my
-        # Fix initializing of all stuff

@@ -48,3 +48,7 @@ def steepestDescent(f, df, z_list, n, xk, my, lambda_low, lambda_high):
 if np.dot(p, dfk) > 0:  # Her la vi til sjekk av retning som descent-retning
     print("Resetting to steepest descent")  # Dette var vel strengt tatt kun nødvendig for Fletcher Reeves
     p = -dfk
+
+[[1, 0.5], [0.5, 0.5]] er eksempel på
+                                    # testproblem der løsningen er grei, f eks [[0.001, 3], [3, 0.005]] (og lignende)
+                                    #er målet å få til å funke
