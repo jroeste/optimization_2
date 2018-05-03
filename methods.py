@@ -10,7 +10,6 @@ def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_
     alpha = alpha0
     f0 = func(z_list, n, x, my, lambda_low, lambda_high)
     while True:
-        print("Backtracking", alpha)
         c = f.c_function(x+alpha*p, lambda_low, lambda_high)
         if np.amin(c) < 1e-10:        #keeps us inside the constraints
             alpha = rho * alpha
@@ -20,12 +19,8 @@ def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_
             alpha = rho * alpha
 
 def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
-    my = 2
-    tau = 1e-10    #Stopping criteria for BFGS
-    counter = 0
-
-    #Initialize BFGS
-    xk = xk
+    my = 1
+    tau = 1e-5    #Stopping criteria for BFGS
     I=np.identity(int(n * (n + 1) / 2) + n)
     while True:
         #begin BFGS
@@ -35,9 +30,6 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             print("innerste while")
             p = -Hk.dot(dfk)/np.linalg.norm(Hk.dot(dfk),2)
             alpha = backtrackingLinesearch(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high)
-            if alpha < 1e-10:
-                print("alpha", alpha)
-                break
             xk_prev = xk
             xk = xk + alpha*p
             sk = xk - xk_prev
@@ -48,7 +40,9 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             if np.dot(yk, sk) > 0: #Update the Hessian if ok
                 rho = 1 / np.dot(yk, sk)
                 Hk = np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
-                print "upate Hessian to", Hk
+            if alpha < 1e-7:
+                print("Breaking on too small alpha", alpha)
+                break
         # end BFGS
 
         zk = my/f.c_function(xk, lambda_low, lambda_high)
@@ -58,15 +52,29 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
         print "columnvector", columnvector
         print "c(x)", f.c_function(xk, lambda_low, lambda_high)
         print "grad c(x)", f.dc_function(xk)
-        print "my:", my
-        if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-5 and my < 1e-3:
-            print "KKT fulfilled"
+        if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-3 and my < 1e-3:
+            print "\nKKT fulfilled"
+            print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+            print "terminal x", xk
+            A_final = f.construct_A_and_b(n, xk)[0]
+            print "terminal matrix A\n", A_final
+            print "with eigenvalues\n", np.linalg.eigvals(A_final)
             return xk
-        elif np.linalg.norm(dfk, 2) < 1e-5 and my < 1e-3:
-            print "Alternative stopping criteria"
+        # elif np.linalg.norm(dfk, 2) < 1e-6 and my < 1e-6:
+        #     print "\nAlternative stopping criteria"
+        #     print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+        #     print "terminal x", xk
+        #     A_final = f.construct_A_and_b(n, xk)[0]
+        #     print "terminal matrix A\n", A_final
+        #     print "with eigenvalues\n", np.linalg.eigvals(A_final)
+        #     return xk
+        elif my < 1e-10:
+            print "\nmy < 1e-10"
+            print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+            print "terminal x", xk
+            A_final = f.construct_A_and_b(n, xk)[0]
+            print "terminal matrix A\n", A_final
+            print "with eigenvalues\n", np.linalg.eigvals(A_final)
             return xk
         my = 0.5*my
-        counter += 1
-        if counter > 10:
-            print "counter timeout"
-            return xk
+        print "downscaling my to", my
