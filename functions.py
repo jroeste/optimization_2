@@ -89,7 +89,7 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
 def construct_z_elliptic(n, m, A, b, area):
     z_list = np.random.uniform(-area, area, (m, n + 1))
     np.save("z_list",z_list)
-    #z_list = np.load("z_list.npy")
+    z_list = np.load("z_list.npy")
     for i in range(m):
         z_list[i][0] = 1
         if compute_r_i(z_list[i], A, b) > 0:
