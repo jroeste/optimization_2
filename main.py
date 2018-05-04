@@ -34,14 +34,14 @@ if __name__ == "__main__":
     # Define the classifying ellipse.
 
     #A_classification = [[1, 0], [0, 1]]  # Circle
-    A_classification = [[0.7, 0.5], [0.5, 0.9]]  # Ellipse
+    #A_classification = [[0.7, 0.5], [0.5, 0.9]]  # Ellipse
     #A_classification = [[0.0001, 10], [10, 0.0001]]  # Hyperbola
     #A_classification = [[0.00001, 50], [50, 0.00001]]  # Hyperbola closer to asymptotes
-    #A_classification = [[0.1, 10], [10, 0.1]]  # A third hyperbola
+    A_classification = [[0.1, 10], [10, 0.1]]  # A third hyperbola
     b_classification=[0, 0]
 
     #Create z-list. Comment in the preferred.
-    z_list = f.construct_z_elliptic(n, m, A_classification, b_classification, area,newdataset=False)
+    z_list = f.construct_z_elliptic(n, m, A_classification, b_classification, area,newdataset=True)
     #z_list = plot.classify_misclassification(m, n, area, prob)
 
     solution = meth.primalBarrier(f.P, f.dP, z_list, n, x_initial, lambda_low, lambda_high)

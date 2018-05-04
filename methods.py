@@ -42,7 +42,7 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
                 rho = 1 / np.dot(yk, sk)
                 Hk = np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
             if alpha < 1e-7:
-                print("Breaking BFGS because alpha is too small. alpha ="), alpha
+                print("Breaking BFGS because alpha is too small. alpha =", alpha)
                 break
         '''End BFGS '''
 
