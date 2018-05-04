@@ -1,13 +1,12 @@
-# optimization_2, endringer
+# OPTIMIZATION_2
 
-Endra til å alltid starte et gyldig sted, midt mellom lambda high og low
-La til alternativ end condition i tillegg til KKT, at den slutter hvis alpha blir 1e-100
-Endra fra min() til amin()
-Endra fra max(df - columnvector) til np.norm(.,2)
+main.py :
+- Define constants and size of constraints.
+- Choose classification type of A-matrix.
+- Create z-list and find solution. Here you specifiy if you want to create a new random dataset, or use an existing one
+  from z_list.npy. Each time you create a new dataset this will be saved into z_list.npy.
+- Plotting
 
-# Disse reserve - exit conditions har vi:
-BFGS gir opp å tilfredsstille grad p mindre enn tau om alpha blir mindre enn 1e-5
-Gir opp å tilfredsstille 
+functions.py :
+-
 
-# Spørsmål
-Vil BFGS alltid gi oss en descent-retning?
