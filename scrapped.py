@@ -48,3 +48,24 @@ def steepestDescent(f, df, z_list, n, xk, my, lambda_low, lambda_high):
 if np.dot(p, dfk) > 0:  # Her la vi til sjekk av retning som descent-retning
     print("Resetting to steepest descent")  # Dette var vel strengt tatt kun nødvendig for Fletcher Reeves
     p = -dfk
+
+[[1, 0.5], [0.5, 0.5]] er eksempel på
+                                    # testproblem der løsningen er grei, f eks [[0.001, 3], [3, 0.005]] (og lignende)
+                                    #er målet å få til å funke
+
+# elif np.linalg.norm(dfk, 2) < 1e-6 and my < 1e-6:
+#     print "\nAlternative stopping criteria"
+#     print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+#     print "terminal x", xk
+#     A_final = f.construct_A_and_b(n, xk)[0]
+#     print "terminal matrix A\n", A_final
+#     print "with eigenvalues\n", np.linalg.eigvals(A_final)
+#     return xk
+
+print "grad p:", dfk
+print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
+print "columnvector", columnvector
+print "c(x)", f.c_function(xk, lambda_low, lambda_high)
+print "grad c(x)", f.dc_function(xk)
+
+print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
