@@ -14,7 +14,7 @@ m = 2000 # number of points
 n = 2 # dimensions
 area = 2.0
 x_length = int(n*(n+1)/2)+n
-prob = 0.05
+prob = 0.02
 min_rec, max_rec = 1, 4
 
 
@@ -43,6 +43,7 @@ if __name__ == "__main__":
 
     b_classification=[0, 0]
     z_list = f.construct_z_elliptic(n, m, A_classification, b_classification, area)
+    z_list = plot.classify_misclassification(m, n, area, prob)
     solution = meth.primalBarrier(f.P, f.dP, z_list, n, x_initial, lambda_low, lambda_high)
 
     # The rest here is for plotting

@@ -8,8 +8,8 @@ def eval_func_model_2D(X,Y,A,b):
     return A[0][0]*X**2+2*A[0][1]*X*Y+A[1][1]*Y**2+b[0]*X+b[1]*Y
 
 def classify_by_ellipse(m,n,area):
-    a00=np.random.uniform(0,2)
-    a11=np.random.uniform(0,2)
+    a00=np.random.uniform(0.5,2)
+    a11=np.random.uniform(0.5,2)
     minval = min(a00,a11)
     a01=np.random.uniform(0, minval)
     A = [[a00,a01], [a01, a11]]  #symmetric, positive definite A
