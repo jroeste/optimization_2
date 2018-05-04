@@ -1,17 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import time
 
-#Alt her er som før
 def eval_func_model_2D(X,Y,A,b):
     return A[0][0]*X**2+2*A[0][1]*X*Y+A[1][1]*Y**2+b[0]*X+b[1]*Y
 
 def classify_by_ellipse(m,n,area):
     a00=np.random.uniform(0,2)
     a11=np.random.uniform(0,2)
-    minval=min(a00,a11)
-    a01=np.random.uniform(0,minval)
+    minval = min(a00,a11)
+    a01=np.random.uniform(0, minval)
     A = [[a00,a01], [a01, a11]]  #symmetric, positive definite A
     c = np.random.uniform(-1, 1, n) #random vector
     z = np.zeros((m,n+1))
@@ -81,7 +81,7 @@ def plot_rectangle_and_points(m,n,area,rec):
 
 
 def plot_dataset_2d(X,Y,Z):
-    CS = plt.contour(X, Y, Z, [1])
+    CS = plt.contour(X, Y, Z, [1], linewidths=4, zorder=10)
     plt.clabel(CS, inline=1, fontsize=10)
 
 def plot_z_points(z,m):
@@ -90,13 +90,13 @@ def plot_z_points(z,m):
             col='green'
         else:
             col='red'
-        plt.plot(z[i][1], z[i][2], 'o', color=col)
+        plt.plot(z[i][1], z[i][2], 'o', color=col, zorder=0)
     #plt.title(title)
 
-def make_ellipse(A,c,area,func):
+def make_ellipse(A,b,area,func):
     delta = 0.01
     x = np.arange(-area*1.2, 1.2*area+delta, delta)
     y = np.arange(-area*1.2, 1.2*area+delta, delta)
     X, Y = np.meshgrid(x, y)
-    Z=func(X, Y, A, c)
+    Z=func(X, Y, A, b)
     return X,Y,Z
