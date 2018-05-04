@@ -1,5 +1,5 @@
 # OPTIMIZATION_2
-
+Description of the files
 main.py :
 - Define constants and size of constraints.
 - Choose classification type of A-matrix.
@@ -8,5 +8,17 @@ main.py :
 - Plotting
 
 functions.py :
--
+- Creating constraints and the gradient of the constraints
+- Creating the data sets
+- Computation of: f, P, grad(f), grad(P), lagrange
 
+methods.py :
+- backtrackingLinesearch() computes the step length alpha.
+- primalBarrier() uses the BFGS method with step lengths form backtrackingLinesearch and stops when
+  it is satisfied either by the KKT-conditions or small enough my.
+
+plotting.py :
+- evalute function value
+- classify by ellipse/rectangle/with misclassification
+- plot contour line
+- plot z-points

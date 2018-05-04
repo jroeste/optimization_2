@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+'''evaluate function value'''
 def eval_func_model_2D(X,Y,A,b):
     return A[0][0]*X**2+2*A[0][1]*X*Y+A[1][1]*Y**2+b[0]*X+b[1]*Y
 
@@ -26,7 +27,6 @@ def classify_by_ellipse(m,n,area):
         else:
             z[i][0]=1   #if inside the ellipse, the weight should be +1
     return z
-
 
 def classify_by_rectangle(m,n,area,min,max):
     rec = [-area / np.random.uniform(min, max)
@@ -52,32 +52,6 @@ def classify_misclassification(m,n,area,prob):
         if a<prob:
             z_list[i][0]*=-1
     return z_list
-
-def plot_rectangle_and_points(m,n,area,rec):
-    rec_left = rec[0]
-    rec_right = rec[1]
-    rec_lower = rec[2]
-    rec_upper = rec[3]
-
-    z=classify_by_rectangle(m,n,area,min,max)
-    fig1 = plt.figure()
-    ax1 = fig1.add_subplot(111, aspect='equal')
-    for i in range(m):
-        if z[i][0]<0:
-            col='green'
-        else:
-            col='red'
-        ax1.plot(z[i][1], z[i][2], 'o', color=col)
-
-    '''Plot rectangle'''
-    ax1.add_patch(
-        patches.Rectangle(
-            (rec_left, rec_lower),  # (x,y)
-            rec_right - rec_left,  # width
-            rec_upper - rec_lower,  # height
-            fill=False))
-    ax1.axis([-area, area + 0.01, -area, area + 0.01])
-    plt.show()
 
 
 def plot_dataset_2d(X,Y,Z):
