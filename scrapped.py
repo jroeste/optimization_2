@@ -63,9 +63,16 @@ if np.dot(p, dfk) > 0:  # Her la vi til sjekk av retning som descent-retning
 #     return xk
 
 print "grad p:", dfk
-print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
-print "columnvector", columnvector
 print "c(x)", f.c_function(xk, lambda_low, lambda_high)
 print "grad c(x)", f.dc_function(xk)
-
 print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+
+if np.dot(dfk, p) > 0:
+    Hk = I
+    continue
+if np.dot(dfk, p) > 0:
+    sys.exit("Not descent!")
+
+counter += 1
+if counter > 100:
+    break

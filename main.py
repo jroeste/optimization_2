@@ -18,8 +18,8 @@ prob = 0.05
 min_rec, max_rec = 1, 4
 
 
-lambda_low = 1
-lambda_high = 10
+lambda_low = 0.001
+lambda_high = 0.6
 
 # Create a feasible starting point
 x_initial = np.zeros(x_length)
@@ -45,10 +45,11 @@ if __name__ == "__main__":
         # Define the classifying ellipse.
 
         A_classification = [[1, 0], [0, 1]]  # Circle
-        A_classification = [[1, 0.3], [0.3, 0.4]]  # Ellipse
+        #A_classification = [[1, 0.3], [0.3, 0.4]]  # Ellipse
         #A_classification = [[0.0001, 10], [10, 0.0001]]  # Hyperbola
         #A_classification = [[0.00001, 50], [50, 0.00001]]  # Hyperbola closer to asymptotes
-        A_classification = [[0.1, 10], [10, 0.1]]  # A third hyperbola where KKT is not fulfilled
+        #A_classification = [[0.1, 10], [10, 0.1]]  # A third hyperbola where KKT is not fulfilled
+        A_classification = [[1, 0], [0, 0]]
 
 
         b_classification=[0, 0]
@@ -60,7 +61,7 @@ if __name__ == "__main__":
         plot.plot_z_points(z_list, m)
         X, Y, Z = plot.make_ellipse(A_solution, b_solution, area, plot.eval_func_model_2D)
         plot.plot_dataset_2d(X, Y, Z)
-        print "\neigenvalues of classification matrix\n", np.linalg.eigvals(A_classification)
+        print("\neigenvalues of classification matrix\n", np.linalg.eigvals(A_classification))
         plt.show()
 
 
