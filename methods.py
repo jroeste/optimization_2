@@ -28,7 +28,6 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
         Hk = I
         dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
         while np.linalg.norm(dfk, 2) > tau:
-            print("BFGS iteration")
             p = -Hk.dot(dfk)/np.linalg.norm(Hk.dot(dfk),2)
             alpha = backtrackingLinesearch(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high)
             xk_prev = xk

@@ -101,5 +101,7 @@ def dP(z_list, n, x, my, lambda_low, lambda_high):
         gradP-=(my/c[i])*dc[i]
     return gradP
 
+
 def lagrange_z(my,x,lambda_low,lambda_high):
     return my/c_function(x,lambda_low,lambda_high)
+
