@@ -9,6 +9,7 @@ def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_
     rho = 0.5
     c1 = 0.4
     alpha = alpha0
+    print(x)
     f0 = func(z_list, n, x, my, lambda_low, lambda_high)
     while True:
         c = f.c_function(x+alpha*p, lambda_low, lambda_high)
@@ -35,14 +36,16 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             xk = xk + alpha*p
             sk = xk - xk_prev
             dfk_prev = dfk
+            #print("xk,",xk)
             dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
+            #print("dfk", dfk)
             yk = dfk - dfk_prev
             Hk_prev = Hk
             if np.dot(yk, sk) > 0: #Update the Hessian if ok
                 rho = 1 / np.dot(yk, sk)
                 Hk = np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
             if alpha < 1e-7:
-                print("Breaking BFGS because alpha is too small. alpha =", alpha)
+                print("Breaking BFGS because alpha is too small. alpha ="), alpha
                 break
         # end BFGS
 
@@ -51,7 +54,7 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
         if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-3 and my < 1e-3:
             print("\nKKT fulfilled")
             print("f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high))
-            print("c(x):\n", f.c_function(xk, lambda_low, lambda_high))
+            print("c(x)", f.c_function(xk, lambda_low, lambda_high))
             print("terminal x", xk)
             A_final = f.construct_A_and_b(n, xk)[0]
             print("terminal matrix A\n", A_final)
@@ -72,3 +75,4 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             return xk
         my = 0.5*my
         print("\nDownscaling my to", my)
+
