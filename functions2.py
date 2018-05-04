@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -13,14 +11,13 @@ def c_function(x, lambda_low, lambda_high):
     c[4]=x[0]*x[2] - lambda_low**2-x[1]**2
     return c
 #Denne er ny, rekner ut dc som 2d-vektor [dc/dx1, dc/dx2..]
-# Denne er grei, men om vi trenger gradienten til Lagrangian må den gjøres på en annen måte
 def dc_function(x):
     grad_c=np.zeros((5,5))
     grad_c[0]=[1,0,0,0,0]
     grad_c[1]=[-1,0,0,0,0]
     grad_c[2]=[0,0,1,0,0]
     grad_c[3]=[0,0,-1,0,0]
-    grad_c[4]=[x[2],-2*x[1],x[0],0,0] #Her var det en feil
+    grad_c[4]=[x[2],-2*x[1],x[0],0,0]
     return grad_c
 
 #Denne er som før
@@ -38,6 +35,10 @@ def P(z_list, n, x, my, lambda_low, lambda_high):
     for i in range(len(c)):
         functionsum-=my*np.log(c[i])
     return functionsum
+
+
+
+
 
 def lagrange_z(my,x,lambda_low,lambda_high):
     return my/c_function(x,lambda_low,lambda_high)
