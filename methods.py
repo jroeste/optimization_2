@@ -9,7 +9,6 @@ def backtrackingLinesearch(func, dfunc, z_list, n, p, x, my, lambda_low, lambda_
     rho = 0.5
     c1 = 0.4
     alpha = alpha0
-    print(x)
     f0 = func(z_list, n, x, my, lambda_low, lambda_high)
     while True:
         c = f.c_function(x+alpha*p, lambda_low, lambda_high)
