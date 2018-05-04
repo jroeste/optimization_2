@@ -73,4 +73,3 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             return xk
         my = 0.5*my
         print("\nDownscaling my to", my)
-

@@ -18,8 +18,8 @@ prob = 0.05
 min_rec, max_rec = 1, 4
 
 
-lambda_low = 0.001
-lambda_high = 0.6
+lambda_low = 0.01
+lambda_high = 10
 
 # Create a feasible starting point
 x_initial = np.zeros(x_length)
