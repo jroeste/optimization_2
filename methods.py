@@ -36,9 +36,7 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
             xk = xk + alpha*p
             sk = xk - xk_prev
             dfk_prev = dfk
-            #print("xk,",xk)
             dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
-            #print("dfk", dfk)
             yk = dfk - dfk_prev
             Hk_prev = Hk
             if np.dot(yk, sk) > 0: #Update the Hessian if ok
