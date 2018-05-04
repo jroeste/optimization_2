@@ -81,7 +81,7 @@ def plot_rectangle_and_points(m,n,area,rec):
 
 
 def plot_dataset_2d(X,Y,Z):
-    CS = plt.contour(X, Y, Z, [1])
+    CS = plt.contour(X, Y, Z, [1], linewidths=4, zorder=10)
     plt.clabel(CS, inline=1, fontsize=10)
 
 def plot_z_points(z,m):
@@ -90,7 +90,7 @@ def plot_z_points(z,m):
             col='green'
         else:
             col='red'
-        plt.plot(z[i][1], z[i][2], 'o', color=col)
+        plt.plot(z[i][1], z[i][2], 'o', color=col, zorder=0)
     #plt.title(title)
 
 def make_ellipse(A,b,area,func):

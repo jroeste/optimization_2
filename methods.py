@@ -27,7 +27,7 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
         Hk = I
         dfk = dfunc(z_list, n, xk, my, lambda_low, lambda_high)
         while np.linalg.norm(dfk, 2) > tau:
-            print("innerste while")
+            print("BFGS iteration")
             p = -Hk.dot(dfk)/np.linalg.norm(Hk.dot(dfk),2)
             alpha = backtrackingLinesearch(func, dfunc, z_list, n, p, xk, my, lambda_low, lambda_high)
             xk_prev = xk
@@ -41,40 +41,29 @@ def primalBarrier(func, dfunc, z_list, n, xk, lambda_low, lambda_high):
                 rho = 1 / np.dot(yk, sk)
                 Hk = np.matmul(I-rho*np.outer(sk,yk),np.matmul(Hk_prev,I-rho*np.outer(yk,sk))) + rho*np.outer(sk,sk)
             if alpha < 1e-7:
-                print("Breaking on too small alpha", alpha)
+                print "Breaking BFGS because alpha is too small. alpha =", alpha
                 break
         # end BFGS
 
         zk = my/f.c_function(xk, lambda_low, lambda_high)
         columnvector = np.array([zk[0]-zk[1]+zk[4]*xk[2], -2*zk[4]*xk[1], zk[2]-zk[3]+zk[4]*xk[0], 0, 0])
-        print "grad p:", dfk
-        print "grad f:", f.df_model(z_list, n, xk, my, lambda_low, lambda_high)
-        print "columnvector", columnvector
-        print "c(x)", f.c_function(xk, lambda_low, lambda_high)
-        print "grad c(x)", f.dc_function(xk)
         if np.linalg.norm((f.df_model(z_list, n, xk, my, lambda_low, lambda_high) - columnvector), 2) < 1e-3 and my < 1e-3:
             print "\nKKT fulfilled"
             print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+            print "c(x)", f.c_function(xk, lambda_low, lambda_high)
             print "terminal x", xk
             A_final = f.construct_A_and_b(n, xk)[0]
             print "terminal matrix A\n", A_final
             print "with eigenvalues\n", np.linalg.eigvals(A_final)
             return xk
-        # elif np.linalg.norm(dfk, 2) < 1e-6 and my < 1e-6:
-        #     print "\nAlternative stopping criteria"
-        #     print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
-        #     print "terminal x", xk
-        #     A_final = f.construct_A_and_b(n, xk)[0]
-        #     print "terminal matrix A\n", A_final
-        #     print "with eigenvalues\n", np.linalg.eigvals(A_final)
-        #     return xk
         elif my < 1e-10:
-            print "\nmy < 1e-10"
+            print "\nTerminating because my < 1e-10"
             print "f value", f.f_model(z_list, n, xk, my, lambda_low, lambda_high)
+            print "c(x)", f.c_function(xk, lambda_low, lambda_high)
             print "terminal x", xk
             A_final = f.construct_A_and_b(n, xk)[0]
             print "terminal matrix A\n", A_final
             print "with eigenvalues\n", np.linalg.eigvals(A_final)
             return xk
         my = 0.5*my
-        print "downscaling my to", my
+        print "\nDownscaling my to", my
