@@ -1,4 +1,4 @@
-# Project 2, TMA4180 Optimization 1. 
+# Project 2, TMA4180 Optimization 1
 
 In this project we use BFGS on a constrained optimization problem. 
 
