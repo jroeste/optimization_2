@@ -1,4 +1,7 @@
 # OPTIMIZATION_2
+
+Project in NTNU course TMA4180 Optimization 1. In this project we use BFGS on a constrained optimization problem. 
+
 Description of the files
 main.py :
 - Define constants and size of constraints.
