@@ -1,6 +1,6 @@
-# OPTIMIZATION_2
+# Project 2, TMA4180 Optimization 1. 
 
-Project in NTNU course TMA4180 Optimization 1. In this project we use BFGS on a constrained optimization problem. 
+In this project we use BFGS on a constrained optimization problem. 
 
 Description of the files
 main.py :
